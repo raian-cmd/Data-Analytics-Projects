@@ -1,0 +1,504 @@
+-- cities
+SELECT DISTINCT city
+from airline_loyalty_customer_history
+-- Total Km Flown historical all around for 2017 and 2018
+-- 2017
+SELECT
+  Year,
+  Month,
+  SUM(Distance) AS total_km
+FROM airline_loyalty_flight_activity
+WHERE Year = 2017 and Month BETWEEN 1 and 12
+GROUP BY Year, Month
+ORDER BY Year, Month;
+
+--2018
+SELECT
+  Year,
+  Month,
+  SUM(Distance) AS total_km
+FROM airline_loyalty_flight_activity
+WHERE Year = 2018 and Month BETWEEN 1 and 12
+GROUP BY Year, Month
+ORDER BY Year, Month;
+
+-- now find the total km flown during each month of 2017 in each city
+-- January
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 1
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- February
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 2
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- March
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 3
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- April
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 4
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- may
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 5
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- June
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 6
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- July
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 7
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- August
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 8
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- September   
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 9
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- October
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 10
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- November
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 11
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- December
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number 
+WHERE fl.Year = 2017 and fl.Month = 12
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- now find the total km flown during each month of 2018 in each city
+-- January 
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 1
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- February 
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 2
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- March
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 3
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- April
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 4
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- May
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 5
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- June 
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 6
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- July
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 7
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- August 
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 8
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- September
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 9
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- October
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 10
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- November
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 11
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+
+-- December
+SELECT
+    fl.Year,
+    fl.Month,
+    c.City,
+    SUM(fl.Distance) AS total_km
+FROM airline_loyalty_flight_activity fl
+JOIN airline_loyalty_customer_history c
+      ON fl.Loyalty_Number = c.Loyalty_Number   
+WHERE fl.Year = 2018 and fl.Month = 12
+GROUP BY 
+    fl.Year,
+    fl.Month,
+    c.City
+ORDER BY 
+    fl.Year,
+    fl.Month,
+    c.City
+-- People that Live in each city
+SELECT 
+    City,
+    COUNT(*) AS number_of_people
+FROM airline_loyalty_customer_history
+GROUP BY City
+ORDER BY number_of_people DESC;
+
+-- Average miles flown 2017 - 2018 All Cities 
+WITH monthly AS (
+  SELECT
+    "Year",
+    "Month",
+    SUM(Distance) AS total_km
+  FROM airline_loyalty_flight_activity
+  GROUP BY "Year", "Month"
+)
+SELECT
+  "Month",
+  AVG(total_km) AS total_km_for_this_month
+FROM monthly
+GROUP BY "Month"
+ORDER BY "Month";
