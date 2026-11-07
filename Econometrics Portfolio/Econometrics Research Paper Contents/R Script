@@ -1,0 +1,327 @@
+---
+title: "Final Research Project Code"
+output: html_document
+date: "2026-03-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+## Importing all data
+library(readxl)
+cesvin00 <- read_excel("Downloads/cesvin00.xlsx", 
+    sheet = "OTM Revisions", skip = 4)
+View(cesvin00)
+
+library(readxl)
+BLSUNRATE <- read_excel("Downloads/BLSUNRATE.xlsx")
+View(BLSUNRATE)
+
+library(readxl)
+qqq_data <- read_excel("Downloads/qqq_data.xlsx", 
+    skip = 1)
+View(qqq_data)
+
+library(readxl)
+CPIAUCSL <- read_excel("Downloads/CPIAUCSL.xlsx", 
+    sheet = "Monthly")
+View(CPIAUCSL)
+
+library(readxl)
+DFF_1_ <- read_excel("Downloads/DFF (1).xlsx", 
+    sheet = "Daily, 7-Day")
+View(DFF_1_)
+
+# change Federal Funds Rate Observation Date columnn name into Month
+
+library(dplyr)
+
+dff <- dff %>%
+  rename(Month = observation_date)
+  
+#converting daily data to monthly for fed funds rate using average
+
+library(dplyr)
+library(lubridate)
+
+dff_monthly <- dff %>%
+  mutate(Month = floor_date(Month, unit = "month")) %>%  # round dates to month
+  group_by(Month) %>%
+  summarise(DFF = mean(DFF, na.rm = TRUE))
+  
+# Renaming observation_date for CPIAUSCL (Inflation)
+
+library(dplyr)
+
+cpi <- cpi %>%
+  rename(Month = observation_date)
+  
+cpi$Month <- as.Date(cpi$Month)
+
+#removing anything before 2006 January
+cpi <- cpi %>%
+  filter(Month >= as.Date("2006-01-01"))
+  
+#merging first 2 data sets into "final_data"
+library(dplyr)
+
+final_data <- dff_monthly %>%
+  left_join(cpi, by = "Month")
+
+#Cleaning BLS Unrate, changing Month format and removing other columns except for total and month
+
+library(dplyr)
+
+unrate <- unrate %>%
+  select(Month, Total)
+  
+library(lubridate)
+
+unrate <- unrate %>%
+  mutate(Month = parse_date_time(Month, orders = "b Y"))
+
+unrate <- unrate %>%
+  mutate(Month = as.Date(floor_date(Month, "month")))
+
+#Merging into final_data
+final_data <- final_data %>%
+  left_join(unrate, by = "Month")
+  
+#Cleaning QQQ Data
+
+library(dplyr)
+
+qqq <- qqq %>%
+  select(Date, Close)
+
+#Fix Date Format
+qqq$Date <- as.Date(qqq$Date)
+
+library(lubridate)
+
+#Convert Into Monthly Prices at the end of the month
+qqq_monthly <- qqq %>%
+  mutate(Month = floor_date(Date, "month")) %>%
+  group_by(Month) %>%
+  summarise(Price = last(Close))
+  
+#Calculate Returns
+qqq_monthly <- qqq_monthly %>%
+  mutate(Return = (Price / lag(Price)) - 1)
+
+#Clean any NA Rows
+qqq_monthly <- qqq_monthly %>%
+  filter(!is.na(Log_Return))
+
+#Merge into Final Data
+final_data <- final_data %>%
+  left_join(qqq_monthly, by = "Month")
+
+# Job Revision Data Cleaning
+library(dplyr)
+
+ces <- ces %>%
+  select(`...1`, `Total Revisions`)
+  
+#Rename Month Column
+ces <- ces %>%
+  rename(
+    Month = `...1`,
+    Revisions = `Total Revisions`
+  )
+
+#Converting Month Column
+library(lubridate)
+
+ces <- ces %>%
+  mutate(Month = parse_date_time(Month, orders = "b Y"))
+
+ces <- ces %>%
+  mutate(Month = as.Date(floor_date(Month, "month")))
+  
+#Merging into final_data
+final_data <- final_data %>%
+  left_join(ces, by = "Month")
+
+#Time Variable 
+final_data <- final_data %>%
+  arrange(Month) %>%   # make sure data is in order
+  mutate(time = row_number())
+  
+## Tariff Dummy 
+final_data$tariff_dummy <- ifelse(
+  final_data$date >= as.Date("2018-01-01") & 
+  final_data$date <= as.Date("2019-12-31"),
+  1, 0
+)
+#Personal Consumer Expenditure Data Clean/Formatting
+library(readxl)
+PCE <- read_excel("Downloads/PCE.xlsx", sheet = "Quarterly")
+
+#Changing Column Names
+colnames(pce_data)[colnames(pce_data) == "observation_date"] <- "Month"
+colnames(pce_data)[colnames(pce_data) == "DPCCRV1Q225SBEA"] <- "PCE_Index"
+
+# CHange the Quarterly Stuff
+library(dplyr)
+library(tidyr)
+
+pce_monthly <- pce_data %>%
+  rowwise() %>%
+  mutate(
+    Month = list(seq(as.Date(Month), by = "month", length.out = 3))
+  ) %>%
+  unnest(Month) %>%
+  select(Month, PCE_Index)
+
+  
+#Merge into Final_Data
+final_data <- merge(final_data, pce_monthly, by = "Month", all.x = TRUE)
+
+#GDP Data
+library(readxl)
+GDP <- read_excel("Downloads/GDP.xlsx", sheet = "Quarterly")
+View(GDP)
+
+#Change the column Name
+colnames(GDP)[colnames(GDP) == "observation_date"] <- "Month"
+GDP$Month <- as.Date(GDP$Month)
+
+library(dplyr)
+library(tidyr)
+
+gdp_monthly <- GDP %>%
+  rowwise() %>%
+  mutate(
+    Month = list(seq(Month, by = "month", length.out = 3))
+  ) %>%
+  unnest(Month) %>%
+  select(Month, GDP)
+  
+
+
+#Models 1 to 6 
+model1 <- lm(fed_rate ~ Total, data = final_data)
+summary(model1)
+
+model2 <- lm(fed_rate ~ Total+inflation+inflation_change, data = final_data)
+summary(model2)
+
+model3 <- lm(fed_rate ~ Total+inflation+inflation_change+tariff_dummy, data = final_data)
+summary(model3)
+
+model4 <- lm(fed_rate ~ Total+inflation+inflation_change+tariff_dummy+PCE_Index.y, data = final_data)
+summary(model4)
+
+model5 <- lm(fed_rate ~ Total+inflation+inflation_change+tariff_dummy+PCE_index.y+job_revision.y+time, data = final_data)
+summay(model5)
+
+model6 <- lm(fed_rate ~ Total+inflation+inflation_change+tariff_dummy+PCE_Index.y+job_revision.y+time+qqq_return.x, data = final_data)
+summary(model6)
+
+#Model 7
+
+# Insert model 7 code here
+
+
+
+#Diagnostics for all models
+
+
+
+
+
+
+
+
+# Graphs for diagnostics
+#Multicolinearyt check
+
+library(ggplot2)
+
+vif_values <- vif(model7)
+
+vif_df <- data.frame(
+  Variable = names(vif_values),
+  VIF = vif_values
+)
+
+ggplot(vif_df, aes(x = reorder(Variable, VIF), y = VIF, fill = VIF > 10)) +
+  geom_bar(stat = "identity", width = 0.7) +
+  coord_flip() +
+  
+  # Color scale: good vs bad
+  scale_fill_manual(
+    values = c("TRUE" = "#E63946",   # red (problem)
+               "FALSE" = "#2A9D8F"), # green/teal (good)
+    guide = "none"
+  ) +
+  
+  # Red threshold line
+  geom_hline(yintercept = 10, linetype = "dashed", color = "#E63946", linewidth = 1) +
+  
+  # Labels on bars
+  geom_text(aes(label = round(VIF, 2)), 
+            hjust = -0.2, size = 4) +
+  
+  labs(
+    title = "Multicollinearity Check (VIF)",
+    subtitle = "Red bars indicate problematic variables (VIF > 10)",
+    x = "Variables",
+    y = "VIF"
+  ) +
+  
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    axis.text.y = element_text(face = "bold")
+  ) +
+  
+  # Extend axis so labels fit
+  ylim(0, max(vif_df$VIF) * 1.2)
+  
+#Fix for GDP and Time Multicollinearity
+final_data$log_GDP <- log(final_data$GDP)
+
+#Re Run Regression 7 with log_GDP rather than GDP
+insert model7new code
+and its graph for diag
+
+#Ridge Regression for model 7
+#Data set for regression
+ridge_data <- final_data[, c(
+  "fed_rate",
+  "inflation_change",
+  "qqq_return",
+  "tariff_dummy",
+  "Total",
+  "job_revision",
+  "PCE_Index",
+  "GDP"   # or gdp_growth if you're using it
+)]
+
+ridge_data <- na.omit(ridge_data)
+
+#The X and the Y
+x <- model.matrix(~ inflation_change + qqq_return + tariff_dummy + Total + job_revision + PCE_Index + GDP, data = ridge_data)
+x <- x[, -1]   # remove intercept
+
+y <- ridge_data$fed_rate
+
+# Running it
+library(glmnet)
+
+ridge_model <- glmnet(x, y, alpha = 0)
+
+
+#Graph for it
+plot(ridge_model, xvar = "lambda")
+
+
+
+
+
+
